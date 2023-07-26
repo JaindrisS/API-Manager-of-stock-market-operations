@@ -1,14 +1,14 @@
 import { Router } from "express";
 
-export default class BaseRouter<T, U> {
+export class BaseRouter<T, U> {
   public router: Router;
   public controller: T;
   public middleware: U;
 
-  constructor(TController: { new (): T }, UMiddleware: { new (): U }) {
+  constructor(TController: T, UMiddleware: U) {
     this.router = Router();
-    this.controller = new TController();
-    this.middleware = new UMiddleware();
+    this.controller = TController;
+    this.middleware = UMiddleware;
     this.routes();
   }
 
