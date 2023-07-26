@@ -1,27 +1,27 @@
 import express, { Application } from "express";
 import dotenv from "dotenv";
 dotenv.config();
+import cors from "cors";
 import DbConnect from "./src/config/mongodb/dbConnect";
-import userRouter from "./src/user/infrastructure/rest-api/user.router";
+import { UserRouters } from "./src/user/infrastructure/rest-api/user.router";
 
 export default class Server {
   private app: Application;
   private port: string;
-  private path = {
-    auth: "/stock-market-operations/api/auth",
-    user: "/stock-market-operations/api/user",
-    trades: "/stock-market-operations/api/trades",
-  };
+  private path = "/stock-market-operations/api";
 
   constructor() {
     this.app = express();
     this.port = process.env.PORT || "8080";
     // middleware
     this.middleware();
-    // router
-    this.router()
     // db
     this.dbConnect();
+
+    this.app.use(cors());
+
+    // router
+    this.app.use(this.path, this.routers());
   }
 
   middleware() {
@@ -34,8 +34,8 @@ export default class Server {
 
   // router
 
-  router() {
-    this.app.use(this.path.user, userRouter);
+  routers(): Array<express.Router> {
+    return [new UserRouters().router];
   }
 
   // listen
