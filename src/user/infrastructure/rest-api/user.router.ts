@@ -1,9 +1,15 @@
-import { Request, Response, Router } from "express";
+import { BaseRouter } from "../../../shared/router/router";
+import { userController } from "../dependecies";
+import { UserController } from "../rest-api/user.controller";
+import { sharedMiddleware } from "../../../shared/middleware/SharedDependencies";
+import { SharedMiddleware } from "../../../shared/middleware/shared.middleware";
 
-const app = Router();
+export class UserRouters extends BaseRouter<UserController, SharedMiddleware> {
+  constructor() {
+    super(userController, sharedMiddleware);
+  }
 
-app.get("/", (_request: Request, response: Response) => {
-  return response.status(200).json("Welcome");
-});
-
-export default app;
+  routes(): void {
+    this.router.get("/users", (req, res) => this.controller.getUsers(req, res));
+  }
+}
