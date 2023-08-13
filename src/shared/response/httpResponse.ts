@@ -7,6 +7,7 @@ export enum HttpStatus {
   CREATED = 201,
   FORBIDDEN = 403,
   INTERNAL_SERVER_ERROR = 500,
+  BAD_REQUEST = 400,
 }
 
 export class HttpResponse {
@@ -49,6 +50,14 @@ export class HttpResponse {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       status: HttpStatus.INTERNAL_SERVER_ERROR,
       statusMsg: "Internal server error",
+      error: data,
+    });
+  }
+
+  BadRequest(res: Response, data: any): Response {
+    return res.status(HttpStatus.BAD_REQUEST).json({
+      status: HttpStatus.BAD_REQUEST,
+      statusMsg: "Bad request",
       error: data,
     });
   }
