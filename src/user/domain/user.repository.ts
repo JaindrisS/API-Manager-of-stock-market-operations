@@ -5,4 +5,6 @@ export interface userRepository {
   getAllUser(): Promise<User[] | null>;
 
   save(data: UserDTO): Promise<unknown>;
+
+  getByEmail(email: string): Promise<User[]|null>;
 }
