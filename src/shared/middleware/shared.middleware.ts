@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { RoleType } from "../../user/domain/user.dto";
+import { RoleType } from "../../user/application/user.dto";
 import { HttpResponse } from "../response/httpResponse";
 import { RequestWithUserRol } from "./shared.Interfaces";
 
@@ -29,5 +29,3 @@ export class SharedMiddleware {
     return next;
   }
 }
-
-
