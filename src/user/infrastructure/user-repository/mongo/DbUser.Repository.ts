@@ -9,6 +9,12 @@ export class UserRepository implements userRepository {
     return data;
   }
 
+  async getByEmail(email: string): Promise<User[] | null> {
+    const response = await userModel.find({ email: email });
+
+    return response
+  }
+
   async save(data: UserDTO): Promise<unknown> {
     try {
       const response = new userModel(data);
