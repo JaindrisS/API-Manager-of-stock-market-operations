@@ -16,6 +16,7 @@ export class UserService {
   async getAllUser(res: Response) {
     try {
       const response = await this.userRepository.getAllUser();
+
       if (response?.length === 0) {
         return this.httpResponse.NotFound(res, "No data");
       }
@@ -25,9 +26,20 @@ export class UserService {
     }
   }
 
+  async getByEmail(email: string) {
+    const response = await this.userRepository.getByEmail(email);
+
+    if (response?.length === 0) {
+      return false;
+    }
+
+    return true;
+  }
+
   async createUser(res: Response, data: UserDTO) {
     try {
       const { name, password, email } = data;
+
       const hastPass = bcrypt.hashSync(password, 10);
       const info = {
         password: hastPass.toString(),
