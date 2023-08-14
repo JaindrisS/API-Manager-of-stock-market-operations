@@ -11,10 +11,19 @@ export class UserController {
     this.httpResponse = httpResponse;
   }
 
-  async getUsers(req: Request, res: Response) {
+  async getUsers(_req: Request, res: Response) {
     try {
-      const response = await this.userService.getAllUser(req, res);
+      const response = await this.userService.getAllUser(res);
 
+      return response;
+    } catch (error) {
+      return this.httpResponse.Error(res, error);
+    }
+  }
+
+  async createUser(req: Request, res: Response) {
+    try {
+      const response = await this.userService.createUser(res, req.body);
       return response;
     } catch (error) {
       return this.httpResponse.Error(res, error);
