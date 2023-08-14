@@ -1,15 +1,20 @@
 import { BaseRouter } from "../../../shared/router/router";
 import { userController } from "../dependecies";
 import { UserController } from "../rest-api/user.controller";
-import { sharedMiddleware } from "../../../shared/middleware/SharedDependencies";
-import { SharedMiddleware } from "../../../shared/middleware/shared.middleware";
+import { userMiddleware } from "../dependecies";
+import { UserMiddleware } from "../user.middleware";
 
-export class UserRouters extends BaseRouter<UserController, SharedMiddleware> {
+export class UserRouters extends BaseRouter<UserController, UserMiddleware> {
   constructor() {
-    super(userController, sharedMiddleware);
+    super(userController, userMiddleware);
   }
 
   routes(): void {
     this.router.get("/users", (req, res) => this.controller.getUsers(req, res));
+    this.router.post(
+      "/users",
+      (req, res, next) => this.middleware.userValidator(req, res, next),
+      (req, res) => this.controller.createUser(req, res)
+    );
   }
 }
