@@ -12,7 +12,7 @@ export class UserRepository implements userRepository {
   async getByEmail(email: string): Promise<User[] | null> {
     const response = await userModel.find({ email: email });
 
-    return response
+    return response;
   }
 
   async save(data: UserDTO): Promise<unknown> {
@@ -23,5 +23,13 @@ export class UserRepository implements userRepository {
     } catch (error) {
       return console.log(error);
     }
+  }
+
+  async updateUser(id: string, data: UserDTO): Promise<unknown> {
+    const response = await userModel.findByIdAndUpdate(id, data, {
+      returnDocument: "after",
+    });
+
+    return response;
   }
 }
