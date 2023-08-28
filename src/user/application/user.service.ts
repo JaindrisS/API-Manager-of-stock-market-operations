@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpResponse } from "../../shared/response/httpResponse";
 import { userRepository } from "../domain/user.repository";
-import { UserDTO } from "./user.dto";
+import { UpdateUserDto, UserDTO } from "./user.dto";
 import * as bcrypt from "bcrypt";
 
 export class UserService {
@@ -51,6 +51,43 @@ export class UserService {
 
       return this.httpResponse.Created(res, user);
     } catch (error) {
+      return this.httpResponse.Error(res, error);
+    }
+  }
+
+  async updateUser(res: Response, id: string, data: UpdateUserDto) {
+    try {
+      const { password, name, email } = data;
+
+      let hastPass;
+      if (password) {
+        hastPass = bcrypt.hashSync(password, 10).toString();
+      }
+
+      let mail;
+
+      if (email) {
+        mail = email.toUpperCase();
+      }
+
+      let nameUpper;
+
+      if (name) {
+        nameUpper = name.toUpperCase();
+      }
+
+      const dataUser = {
+        password: hastPass,
+        name: nameUpper,
+        email: mail,
+      };
+
+      const user = await this.userRepository.updateUser(id, dataUser);
+
+      return this.httpResponse.OK(res, user);
+    } catch (error) {
+      console.log(error);
+
       return this.httpResponse.Error(res, error);
     }
   }
