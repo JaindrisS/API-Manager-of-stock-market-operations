@@ -9,23 +9,26 @@ export class UserMiddleware extends SharedMiddleware {
     super(httpResponse);
   }
 
-  userValidator(req: Request, res: Response, next: NextFunction) {
+  createValidator(req: Request, res: Response, next: NextFunction, dto: any) {
     const { name, email, password, img } = req.body;
 
-    const valid = new UserDTO();
+    const valid = dto;
 
     valid.name = name;
     valid.email = email;
     valid.password = password;
     valid.img = img;
 
-    validate(valid, { groups: ["IsEmailAlreadyExist"] }).then((err) => {
-      const data = err.map((error) => {
-        return error.constraints;
-      });
-
+    validate(valid).then((err) => {
       if (err.length > 0) {
-        return this.httpResponse.BadRequest(res, data);
+        const response = err.map((error) => {
+          return {
+            value: error.property,
+            error: error.constraints,
+          };
+        });
+
+        return this.httpResponse.BadRequest(res, response);
       } else {
         return next();
       }
