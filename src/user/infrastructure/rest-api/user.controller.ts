@@ -29,4 +29,16 @@ export class UserController {
       return this.httpResponse.Error(res, error);
     }
   }
+
+  async updateUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const response = await this.userService.updateUser(res, id, req.body);
+
+      return response;
+    } catch (error) {
+      return this.httpResponse.Error(res, console.error);
+    }
+  }
 }
