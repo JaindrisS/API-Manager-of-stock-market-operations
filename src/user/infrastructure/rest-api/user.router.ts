@@ -1,7 +1,12 @@
 import { BaseRouter } from "../../../shared/router/router";
 import { userController } from "../dependecies";
 import { UserController } from "../rest-api/user.controller";
-import { userMiddleware, userDTO, updateUserDto } from "../dependecies";
+import {
+  userMiddleware,
+  userDTO,
+  updateUserDto,
+  idParam,
+} from "../dependecies";
 import { UserMiddleware } from "../user.middleware";
 
 export class UserRouters extends BaseRouter<UserController, UserMiddleware> {
@@ -19,6 +24,8 @@ export class UserRouters extends BaseRouter<UserController, UserMiddleware> {
     );
     this.router.put(
       "/users/:id",
+      (req, res, next) =>
+        this.middleware.idParamValidator(req, res, next, idParam),
       (req, res, next) =>
         this.middleware.createValidator(req, res, next, updateUserDto),
       (req, res) => this.controller.updateUser(req, res)
