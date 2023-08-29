@@ -34,4 +34,26 @@ export class UserMiddleware extends SharedMiddleware {
       }
     });
   }
+
+  idParamValidator(req: Request, res: Response, next: NextFunction, dto: any) {
+    const { id } = req.params;
+
+    const valid = dto;
+
+    valid.id = id;
+    validate(valid).then((err) => {
+      if (err.length > 0) {
+        const response = err.map((error) => {
+          return {
+            value: error.property,
+            error: error.constraints,
+          };
+        });
+
+        return this.httpResponse.BadRequest(res, response);
+      } else {
+        return next();
+      }
+    });
+  }
 }
