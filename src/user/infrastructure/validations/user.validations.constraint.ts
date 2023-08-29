@@ -22,3 +22,20 @@ export class IsEmailAlreadyExistConstrain
     return `${_validationArguments?.value} mail already exists`;
   }
 }
+
+@ValidatorConstraint({ name: "MongoIdDoesNotExist", async: true })
+export class MongoIdDoesNotExistConstrain
+  implements ValidatorConstraintInterface
+{
+  constructor(private userService: UserService) {}
+
+  async validate(id: any, _arg: ValidationArguments): Promise<boolean> {
+    return !(await this.userService.getById(id));
+  }
+
+  defaultMessage(
+    _validationArguments?: ValidationArguments | undefined
+  ): string {
+    return `${_validationArguments?.value} id does not exist`;
+  }
+}
