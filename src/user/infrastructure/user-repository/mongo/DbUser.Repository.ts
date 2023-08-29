@@ -1,7 +1,7 @@
 import { userModel } from "./user.model";
 import { User } from "../../../domain/user.interfaces";
 import { userRepository } from "../../../domain/user.repository";
-import { UserDTO } from "../../../application/user.dto";
+import { UserDTO, UpdateUserDto, IdParam } from "../../../application/user.dto";
 
 export class UserRepository implements userRepository {
   async getAllUser(): Promise<User[] | null> {
@@ -25,11 +25,20 @@ export class UserRepository implements userRepository {
     }
   }
 
-  async updateUser(id: string, data: UserDTO): Promise<unknown> {
+  async updateUser(id: string, data: UpdateUserDto): Promise<unknown> {
     const response = await userModel.findByIdAndUpdate(id, data, {
       returnDocument: "after",
     });
 
     return response;
+  }
+
+  async getById(id: IdParam) {
+    try {
+      const response = await userModel.findById(id);
+      return response;
+    } catch (error) {
+      return console.log(error);
+    }
   }
 }
