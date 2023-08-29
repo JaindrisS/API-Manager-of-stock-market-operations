@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpResponse } from "../../shared/response/httpResponse";
 import { userRepository } from "../domain/user.repository";
-import { UpdateUserDto, UserDTO } from "./user.dto";
+import { IdParam, UpdateUserDto, UserDTO } from "./user.dto";
 import * as bcrypt from "bcrypt";
 
 export class UserService {
@@ -86,9 +86,17 @@ export class UserService {
 
       return this.httpResponse.OK(res, user);
     } catch (error) {
-      console.log(error);
-
       return this.httpResponse.Error(res, error);
     }
+  }
+
+  async getById(id: IdParam) {
+    const response = (await this.userRepository.getById(id)) as [];
+
+    if (response?.length === 0) {
+      return false;
+    }
+
+    return true;
   }
 }
