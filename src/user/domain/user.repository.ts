@@ -1,4 +1,4 @@
-import { UserDTO,UpdateUserDto } from "../application/user.dto";
+import { UserDTO, UpdateUserDto,IdParam } from "../application/user.dto";
 import { User } from "./user.interfaces";
 
 export interface userRepository {
@@ -8,5 +8,7 @@ export interface userRepository {
 
   getByEmail(email: string): Promise<User[] | null>;
 
-  updateUser( id: string, data: UpdateUserDto): Promise<unknown>;
+  updateUser(id: string, data: UpdateUserDto): Promise<unknown>;
+
+  getById(id: IdParam): Promise<unknown>;
 }
