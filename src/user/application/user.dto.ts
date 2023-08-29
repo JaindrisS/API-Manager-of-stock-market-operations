@@ -4,8 +4,9 @@ import {
   IsEmail,
   IsOptional,
   Length,
+  IsMongoId
 } from "class-validator";
-import { IsEmailAlreadyExist } from "./user.validations";
+import { IsEmailAlreadyExist, MongoIdDoesNotExist } from "./user.validations";
 export enum RoleType {
   USER = "USER",
   ADMIN = "ADMIN",
@@ -52,4 +53,10 @@ export class UpdateUserDto {
 
   @IsOptional()
   img?: string;
+}
+
+export class IdParam {
+  @IsMongoId()
+  @MongoIdDoesNotExist({ groups: ["MongoIdDoesNotExist"] })
+  id!: string;
 }
