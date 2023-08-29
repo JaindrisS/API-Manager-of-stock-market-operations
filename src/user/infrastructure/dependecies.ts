@@ -3,7 +3,7 @@ import { UserService } from "../application/user.service";
 import { UserController } from "./rest-api/user.controller";
 import { UserRepository } from "../infrastructure/user-repository/mongo/DbUser.Repository";
 import { UserMiddleware } from "./user.middleware";
-import { UpdateUserDto, UserDTO } from "../application/user.dto";
+import { UpdateUserDto, UserDTO,IdParam } from "../application/user.dto";
 
 export const httpResponse = new HttpResponse();
 
@@ -18,3 +18,6 @@ export const updateUserDto = new UpdateUserDto();
 export const userDTO = new UserDTO();
 
 export const userMiddleware = new UserMiddleware();
+
+
+export const idParam= new IdParam()
