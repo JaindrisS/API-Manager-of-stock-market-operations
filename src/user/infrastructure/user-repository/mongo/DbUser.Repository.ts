@@ -26,7 +26,7 @@ export class UserRepository implements userRepository {
   }
 
   async updateUser(id: string, data: UpdateUserDto): Promise<unknown> {
-    const response = await userModel.findByIdAndUpdate(id, data, {
+    const response = await userModel.findOneAndUpdate({ _id: id }, data, {
       returnDocument: "after",
     });
 
@@ -40,5 +40,14 @@ export class UserRepository implements userRepository {
     } catch (error) {
       return console.log(error);
     }
+  }
+
+  async deleteUser(id: string): Promise<unknown> {
+    const response = await userModel.findOneAndUpdate(
+      { _id: id, status: true },
+      { status: false }
+    );
+
+    return response;
   }
 }
