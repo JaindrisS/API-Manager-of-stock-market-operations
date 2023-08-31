@@ -41,4 +41,16 @@ export class UserController {
       return this.httpResponse.Error(res, console.error);
     }
   }
+
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const response = await this.userService.deleteUser(res,id);
+
+      return response;
+    } catch (error) {
+      return this.httpResponse.Error(res, error);
+    }
+  }
 }
