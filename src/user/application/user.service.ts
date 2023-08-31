@@ -28,6 +28,7 @@ export class UserService {
 
   async getByEmail(email: string) {
     const response = await this.userRepository.getByEmail(email);
+    
 
     if (response?.length === 0) {
       return false;
@@ -83,6 +84,9 @@ export class UserService {
       };
 
       const user = await this.userRepository.updateUser(id, dataUser);
+      if (!user) {
+        return this.httpResponse.NotFound(res, "User not found");
+      }
 
       return this.httpResponse.OK(res, user);
     } catch (error) {
@@ -93,10 +97,16 @@ export class UserService {
   async getById(id: IdParam) {
     const response = (await this.userRepository.getById(id)) as [];
 
-    if (response?.length === 0) {
-      return false;
+    return response;
+  }
+
+  async deleteUser(res: Response, id: string) {
+    const response = await this.userRepository.deleteUser(id);
+
+    if (response) {
+      return this.httpResponse.OK(res, "User deleted");
     }
 
-    return true;
+    return this.httpResponse.NotFound(res, "User not found");
   }
 }
