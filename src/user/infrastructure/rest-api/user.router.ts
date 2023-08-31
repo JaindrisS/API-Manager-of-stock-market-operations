@@ -25,10 +25,17 @@ export class UserRouters extends BaseRouter<UserController, UserMiddleware> {
     this.router.put(
       "/users/:id",
       (req, res, next) =>
-        this.middleware.idParamValidator(req, res, next, idParam),
-      (req, res, next) =>
         this.middleware.createValidator(req, res, next, updateUserDto),
+      (req, res, next) =>
+        this.middleware.idParamValidator(req, res, next, idParam),
       (req, res) => this.controller.updateUser(req, res)
+    );
+
+    this.router.delete(
+      "/users/:id",
+      (req, res, next) =>
+        this.middleware.idParamValidator(req, res, next, idParam),
+      (req, res) => this.controller.deleteUser(req, res)
     );
   }
 }
