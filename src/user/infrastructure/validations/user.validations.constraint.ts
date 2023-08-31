@@ -30,7 +30,13 @@ export class MongoIdDoesNotExistConstrain
   constructor(private userService: UserService) {}
 
   async validate(id: any, _arg: ValidationArguments): Promise<boolean> {
-    return !(await this.userService.getById(id));
+    const user = await this.userService.getById(id);
+
+    if (user) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   defaultMessage(
