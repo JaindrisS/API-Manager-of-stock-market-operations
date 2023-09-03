@@ -1,5 +1,5 @@
 import { UserDTO, UpdateUserDto, IdParam } from "../application/user.dto";
-import { User } from "./user.interfaces";
+import { User } from "../../shared/interfaces/user.interfaces";
 
 export interface userRepository {
   getAllUser(): Promise<User[] | null>;
