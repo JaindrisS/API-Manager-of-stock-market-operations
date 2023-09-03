@@ -1,5 +1,5 @@
-import { userModel } from "./user.model";
-import { User } from "../../../domain/user.interfaces";
+import { userModel } from "../../../../shared/models/user.model";
+import { User } from "../../../../shared/interfaces/user.interfaces";
 import { userRepository } from "../../../domain/user.repository";
 import { UserDTO, UpdateUserDto, IdParam } from "../../../application/user.dto";
 
