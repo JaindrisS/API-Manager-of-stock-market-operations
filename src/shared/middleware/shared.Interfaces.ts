@@ -1,4 +1,4 @@
-import { User } from "../../user/domain/user.interfaces";
+import { User } from "../../shared/interfaces/user.interfaces";
 import { Request } from "express";
 
 export interface RequestWithUserRol extends Request {
