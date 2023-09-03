@@ -2,6 +2,7 @@ import { Response } from "express";
 import * as bcrypt from "bcrypt";
 import { HttpResponse } from "../../shared/response/httpResponse";
 import { authRepository } from "../domain/auth.repository";
+import { generateJwt } from "./generateJwt";
 
 export class AuthService {
   private readonly authRepository: authRepository;
@@ -26,10 +27,12 @@ export class AuthService {
         return this.httpResponse.BadRequest(res, "Invalid email or password");
       }
 
+      const token = await generateJwt(user.id);
+
       return this.httpResponse.OK(res, {
         msg: "Login ok",
         user,
-        token: "token",
+        token: token,
       });
     } catch (error) {
       return this.httpResponse.Error(res, error);
