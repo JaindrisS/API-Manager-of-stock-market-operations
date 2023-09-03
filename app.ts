@@ -4,6 +4,7 @@ dotenv.config();
 import cors from "cors";
 import DbConnect from "./src/config/mongodb/dbConnect";
 import { UserRouters } from "./src/user/infrastructure/rest-api/user.router";
+import { AuthRouter } from "./src/auth/infrastructure/rest-api/auth.router";
 
 export default class Server {
   private app: Application;
@@ -35,7 +36,7 @@ export default class Server {
   // router
 
   routers(): Array<express.Router> {
-    return [new UserRouters().router];
+    return [new UserRouters().router, new AuthRouter().router];
   }
 
   // listen
