@@ -4,6 +4,8 @@ import { HttpResponse } from "../../shared/response/httpResponse";
 import { authRepository } from "../domain/auth.repository";
 import { generateJwt } from "./generateJwt";
 
+const invalidatedTokens = new Set();
+
 export class AuthService {
   private readonly authRepository: authRepository;
   private readonly httpResponse: HttpResponse;
@@ -37,5 +39,24 @@ export class AuthService {
     } catch (error) {
       return this.httpResponse.Error(res, error);
     }
+  }
+
+  async logout(token: string, res: Response) {
+
+    if (token) {
+      await this.blacklistToken(token);
+
+      return this.httpResponse.OK(res, "Token invalidated");
+    } else {
+      return this.httpResponse.BadRequest(res, "No token provided");
+    }
+  }
+
+  async blacklistToken(token: string) {
+    invalidatedTokens.add(token);
+  }
+
+  async isTokenBlacklisted(token: string) {
+    return invalidatedTokens.has(token);
   }
 }
