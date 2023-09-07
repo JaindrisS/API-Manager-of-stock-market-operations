@@ -9,4 +9,4 @@ const httpResponse = new HttpResponse();
 const authService = new AuthService(authRepository, httpResponse);
 
 export const authController = new AuthController(authService, httpResponse);
-export const authMiddleware = new AuthMiddleware(httpResponse);
+export const authMiddleware = new AuthMiddleware(httpResponse, authService);
