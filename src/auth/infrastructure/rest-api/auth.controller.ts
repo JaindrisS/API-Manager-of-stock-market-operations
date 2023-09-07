@@ -22,4 +22,16 @@ export class AuthController {
       return this.httpResponse.Error(res, error);
     }
   }
+
+  async logout(req: Request, res: Response) {
+    try {
+      const token = <string>req.header("Authorization");
+
+      const response = this.authService.logout(token, res);
+
+      return response;
+    } catch (error) {
+      return this.httpResponse.Error(res, error);
+    }
+  }
 }
