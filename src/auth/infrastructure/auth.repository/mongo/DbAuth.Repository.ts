@@ -11,4 +11,16 @@ export class AuthRepository implements authRepository {
 
     return user;
   }
+
+  async ResetPassword(id: string, token: string): Promise<User | null> {
+    const user = await userModel.findByIdAndUpdate(
+      id,
+      {
+        resetPassword: token,
+      },
+      { returnDocument: "after" }
+    );
+
+    return user;
+  }
 }
