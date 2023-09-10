@@ -19,10 +19,10 @@ export class AuthRouter extends BaseRouter<AuthController, AuthMiddleware> {
     );
 
     this.router.post("/login", (req, res) => this.controller.login(req, res));
-    this.router.post(
-      "/logout",
+    this.router.post("/logout", (req, res) => this.controller.logout(req, res));
 
-      (req, res) => this.controller.logout(req, res)
+    this.router.post("/send-Mail", (req, res) =>
+      this.controller.sendMail(req, res)
     );
   }
 }
