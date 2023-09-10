@@ -34,4 +34,12 @@ export class AuthController {
       return this.httpResponse.Error(res, error);
     }
   }
+
+  async sendMail(req: Request, res: Response) {
+    const { email } = req.body;
+
+    const response = this.authService.sendMail(email, res);
+
+    return response;
+  }
 }
