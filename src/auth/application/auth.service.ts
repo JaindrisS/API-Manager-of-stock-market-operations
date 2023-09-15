@@ -5,6 +5,11 @@ import { authRepository } from "../domain/auth.repository";
 import { generateJwt } from "./generateJwt";
 import { getEmailTemplate } from "../infrastructure/template";
 import { sendEmail } from "../infrastructure/sendMail";
+import {
+  LoginDto,
+  ResetPasswordDto,
+  EmailValidationDto,
+} from "../domain/auth.dto";
 
 const invalidatedTokens = new Set();
 
@@ -17,7 +22,9 @@ export class AuthService {
     this.httpResponse = httpResponse;
   }
 
-  async login(email: string, password: string, res: Response) {
+  async login(data: LoginDto, res: Response) {
+    const { email, password } = data;
+
     try {
       const user = await this.authRepository.getUser(email);
 
@@ -39,6 +46,7 @@ export class AuthService {
         token: token,
       });
     } catch (error) {
+
       return this.httpResponse.Error(res, error);
     }
   }
@@ -53,7 +61,9 @@ export class AuthService {
     }
   }
 
-  async sendMail(email: string, res: Response) {
+  async sendMail(data: EmailValidationDto, res: Response) {
+    const { email } = data;
+
     try {
       const user = await this.authRepository.getUser(email);
 
@@ -79,6 +89,34 @@ export class AuthService {
     } catch (error) {
       return this.httpResponse.Error(res, error);
     }
+  }
+
+  async resetPassword(res: Response, token: string, data: ResetPasswordDto) {
+    const { password, password2 } = data;
+
+    const user = await this.authRepository.getByToken(token);
+
+    // validate if the token is already used
+    if (!user) {
+      return this.httpResponse.Unauthorized(
+        res,
+        "Must mail request or token has expired"
+      );
+    }
+
+    if (password !== password2) {
+      return this.httpResponse.BadRequest(res, "Passwords do not match");
+    }
+
+    // encrypt password
+    const newPassword = bcrypt.hashSync(password, 10);
+
+    await this.authRepository.updatePassword(user.id, newPassword);
+
+    // the token already used is cancelled
+    await this.authRepository.ResetPassword(user.id, null);
+
+    return this.httpResponse.OK(res, "Password was changed successfully");
   }
 
   async blacklistToken(token: string) {
