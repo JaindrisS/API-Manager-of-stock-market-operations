@@ -60,33 +60,7 @@ export class AuthService {
     }
   }
 
-  async resetPassword(res: Response, token: string, data: ResetPasswordDto) {
-    const { password, password2 } = data;
-
-    const user = await this.authRepository.getByToken(token);
-
-    // validate if the token is already used
-    if (!user) {
-      return this.httpResponse.Unauthorized(
-        res,
-        "Must mail request or token has expired"
-      );
-    }
-
-    if (password !== password2) {
-      return this.httpResponse.BadRequest(res, "Passwords do not match");
-    }
-
-    // encrypt password
-    const newPassword = bcrypt.hashSync(password, 10);
-
-    await this.authRepository.updatePassword(user.id, newPassword);
-
-    // the token already used is cancelled
-    await this.authRepository.ResetPassword(user.id, null);
-
-    return this.httpResponse.OK(res, "Password was changed successfully");
-  }
+  
 
   async blacklistToken(token: string) {
     invalidatedTokens.add(token);
