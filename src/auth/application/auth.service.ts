@@ -46,7 +46,6 @@ export class AuthService {
         token: token,
       });
     } catch (error) {
-
       return this.httpResponse.Error(res, error);
     }
   }
