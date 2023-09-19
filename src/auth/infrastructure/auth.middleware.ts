@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { validate } from "class-validator";
 import { SharedMiddleware } from "../../shared/middleware/shared.middleware";
 import { HttpResponse } from "../../shared/response/httpResponse";
 import { AuthService } from "../application/auth.service";
@@ -46,5 +47,30 @@ export class AuthMiddleware extends SharedMiddleware {
     } catch (error) {
       return this.httpResponse.Unauthorized(res, "Unauthorized: Invalid Token");
     }
+  }
+
+  ValidateDto(req: Request, res: Response, next: NextFunction, dto: any) {
+    const { email, password, password2 } = req.body;
+
+    const valid = dto;
+
+    valid.email = email;
+    valid.password = password;
+    valid.password2 = password2;
+
+    validate(valid).then((err) => {
+      if (err.length > 0) {
+        const response = err.map((error) => {
+          return {
+            value: error.property,
+            error: error.constraints,
+          };
+        });
+
+        return this.httpResponse.BadRequest(res, response);
+      } else {
+        return next();
+      }
+    });
   }
 }
