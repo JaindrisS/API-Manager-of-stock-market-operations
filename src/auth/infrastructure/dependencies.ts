@@ -8,12 +8,21 @@ import {
   ResetPasswordDto,
   EmailValidationDto,
 } from "../domain/auth.dto";
+import { PasswordService } from "../application/password.service";
 
 const authRepository = new AuthRepository();
 const httpResponse = new HttpResponse();
 const authService = new AuthService(authRepository, httpResponse);
 
-export const authController = new AuthController(authService, httpResponse);
+export const passwordService = new PasswordService(
+  authRepository,
+  httpResponse
+);
+export const authController = new AuthController(
+  authService,
+  passwordService,
+  httpResponse
+);
 export const authMiddleware = new AuthMiddleware(httpResponse, authService);
 
 export const loginDto = new LoginDto();
