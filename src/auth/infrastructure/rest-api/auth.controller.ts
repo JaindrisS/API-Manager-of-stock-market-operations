@@ -1,13 +1,21 @@
 import { Request, Response } from "express";
 import { HttpResponse } from "../../../shared/response/httpResponse";
 import { AuthService } from "../../application/auth.service";
+import { PasswordService } from "../../application/password.service";
 
 export class AuthController {
   public readonly authService: AuthService;
+  public readonly passwordService: PasswordService;
+
   public readonly httpResponse: HttpResponse;
 
-  constructor(authService: AuthService, httpResponse: HttpResponse) {
+  constructor(
+    authService: AuthService,
+    passwordService: PasswordService,
+    httpResponse: HttpResponse
+  ) {
     this.authService = authService;
+    this.passwordService = passwordService;
     this.httpResponse = httpResponse;
   }
 
@@ -34,7 +42,7 @@ export class AuthController {
   }
 
   async sendMail(req: Request, res: Response) {
-    const response = this.authService.sendMail(req.body, res);
+    const response = this.passwordService.sendMail(req.body, res);
 
     return response;
   }
@@ -42,7 +50,7 @@ export class AuthController {
   async resetPassword(req: Request, res: Response) {
     const token = <string>req.header("Authorization");
 
-    const response = this.authService.resetPassword(res, token, req.body);
+    const response = this.passwordService.resetPassword(res, token, req.body);
 
     return response;
   }
