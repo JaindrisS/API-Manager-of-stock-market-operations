@@ -23,4 +23,20 @@ export class AuthRepository implements authRepository {
 
     return user;
   }
+
+  async getByToken(token: string): Promise<User | null> {
+    const user = await userModel.findOne({ resetPassword: token });
+
+    return user;
+  }
+
+  async updatePassword(id: string, password: string): Promise<User | null> {
+    const user = await userModel.findByIdAndUpdate(
+      id,
+      { password: password },
+      { returnDocument: "after" }
+    );
+
+    return user;
+  }
 }
