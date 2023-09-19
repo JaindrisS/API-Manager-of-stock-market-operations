@@ -60,36 +60,6 @@ export class AuthService {
     }
   }
 
-  async sendMail(data: EmailValidationDto, res: Response) {
-    const { email } = data;
-
-    try {
-      const user = await this.authRepository.getUser(email);
-
-      if (!user) {
-        return this.httpResponse.BadRequest(res, "Mail is incorrect");
-      }
-
-      const token = await generateJwt(user?.id);
-
-      const data = { email, token };
-
-      const emailHtmlTemplate = getEmailTemplate(data);
-
-      await sendEmail(email, "Recuperar contrasena", emailHtmlTemplate);
-
-      this.authRepository.ResetPassword(user.id, <string>token);
-
-      return this.httpResponse.OK(res, {
-        email,
-        token,
-        msg: "Email sent successfully!",
-      });
-    } catch (error) {
-      return this.httpResponse.Error(res, error);
-    }
-  }
-
   async resetPassword(res: Response, token: string, data: ResetPasswordDto) {
     const { password, password2 } = data;
 
