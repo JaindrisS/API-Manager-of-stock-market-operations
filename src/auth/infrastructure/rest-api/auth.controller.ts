@@ -13,9 +13,7 @@ export class AuthController {
 
   async login(req: Request, res: Response) {
     try {
-      const { email, password } = req.body;
-
-      const response = await this.authService.login(email, password, res);
+      const response = await this.authService.login(req.body, res);
 
       return response;
     } catch (error) {
@@ -36,9 +34,15 @@ export class AuthController {
   }
 
   async sendMail(req: Request, res: Response) {
-    const { email } = req.body;
+    const response = this.authService.sendMail(req.body, res);
 
-    const response = this.authService.sendMail(email, res);
+    return response;
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    const token = <string>req.header("Authorization");
+
+    const response = this.authService.resetPassword(res, token, req.body);
 
     return response;
   }
