@@ -3,23 +3,23 @@ import * as bcrypt from "bcrypt";
 import { HttpResponse } from "../../shared/response/httpResponse";
 import { authRepository } from "../domain/auth.repository";
 import { generateJwt } from "./generateJwt";
-import { getEmailTemplate } from "../infrastructure/template";
-import { sendEmail } from "../infrastructure/sendMail";
-import {
-  LoginDto,
-  ResetPasswordDto,
-  EmailValidationDto,
-} from "../domain/auth.dto";
+import { LoginDto } from "../domain/auth.dto";
+import { TokenService } from "./token.service";
 
-const invalidatedTokens = new Set();
 
 export class AuthService {
   private readonly authRepository: authRepository;
   private readonly httpResponse: HttpResponse;
+  private readonly tokenService: TokenService;
 
-  constructor(authRepository: authRepository, httpResponse: HttpResponse) {
+  constructor(
+    authRepository: authRepository,
+    tokenService: TokenService,
+    httpResponse: HttpResponse
+  ) {
     this.authRepository = authRepository;
     this.httpResponse = httpResponse;
+    this.tokenService = tokenService;
   }
 
   async login(data: LoginDto, res: Response) {
@@ -52,7 +52,7 @@ export class AuthService {
 
   async logout(token: string, res: Response) {
     if (token) {
-      await this.blacklistToken(token);
+      await this.tokenService.blacklistToken(token);
 
       return this.httpResponse.OK(res, "Token invalidated");
     } else {
@@ -60,13 +60,5 @@ export class AuthService {
     }
   }
 
-  
 
-  async blacklistToken(token: string) {
-    invalidatedTokens.add(token);
-  }
-
-  async isTokenBlacklisted(token: string) {
-    return invalidatedTokens.has(token);
-  }
 }
