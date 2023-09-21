@@ -5,13 +5,14 @@ import { SharedMiddleware } from "../../shared/middleware/shared.middleware";
 import { HttpResponse } from "../../shared/response/httpResponse";
 import { AuthService } from "../application/auth.service";
 import { RequestWithUserRol } from "../../shared/middleware/shared.Interfaces";
+import { TokenService } from "../application/token.service";
 
 export class AuthMiddleware extends SharedMiddleware {
-  private readonly authService: AuthService;
+  private readonly tokenService: TokenService;
 
-  constructor(httpResponse: HttpResponse, authService: AuthService) {
+  constructor(httpResponse: HttpResponse, tokenService: TokenService) {
     super(httpResponse);
-    this.authService = authService;
+    this.tokenService = tokenService;
   }
 
   async validateToken(
@@ -30,7 +31,7 @@ export class AuthMiddleware extends SharedMiddleware {
       );
     }
 
-    const invalidatedTokens = await this.authService.isTokenBlacklisted(token);
+    const invalidatedTokens = await this.tokenService.isTokenBlacklisted(token);
 
     if (invalidatedTokens) {
       return this.httpResponse.Unauthorized(
