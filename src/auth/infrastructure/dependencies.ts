@@ -9,10 +9,12 @@ import {
   EmailValidationDto,
 } from "../domain/auth.dto";
 import { PasswordService } from "../application/password.service";
+import { TokenService } from "../application/token.service";
 
 const authRepository = new AuthRepository();
 const httpResponse = new HttpResponse();
-const authService = new AuthService(authRepository, httpResponse);
+const tokenService = new TokenService();
+const authService = new AuthService(authRepository, tokenService, httpResponse);
 
 export const passwordService = new PasswordService(
   authRepository,
@@ -23,7 +25,7 @@ export const authController = new AuthController(
   passwordService,
   httpResponse
 );
-export const authMiddleware = new AuthMiddleware(httpResponse, authService);
+export const authMiddleware = new AuthMiddleware(httpResponse, tokenService);
 
 export const loginDto = new LoginDto();
 export const resetPasswordDto = new ResetPasswordDto();
