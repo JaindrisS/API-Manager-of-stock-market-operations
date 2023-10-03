@@ -4,6 +4,7 @@ import path from "path";
 import DailyRotateFile from "winston-daily-rotate-file";
 
 const logFilePath = path.join("logs/general-logs");
+
 const logger = () => {
   const myFormat = printf(({ level, message, timestamp }) => {
     return `${timestamp} ${level}: ${message}`;
