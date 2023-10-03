@@ -1,10 +1,14 @@
 import express, { Application } from "express";
+import morgan from "morgan";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
 import DbConnect from "./src/config/mongodb/dbConnect";
 import { UserRouters } from "./src/user/infrastructure/rest-api/user.router";
 import { AuthRouter } from "./src/auth/infrastructure/rest-api/auth.router";
+import { winstonLogger } from "./src/auth/infrastructure/logger/logger";
+import { sharedMiddleware } from "./src/shared/middleware/SharedDependencies";
+
 
 export default class Server {
   private app: Application;
@@ -19,14 +23,21 @@ export default class Server {
     // db
     this.dbConnect();
 
-    this.app.use(cors());
-
     // router
     this.app.use(this.path, this.routers());
   }
 
   middleware() {
+    this.app.use(cors());
     this.app.use(express.json());
+
+    // Loggers
+    this.app.use(
+      morgan("combined", {
+        stream: { write: (message) => winstonLogger.info(message.trim()) },
+      })
+    );
+    this.app.use(sharedMiddleware.customLoggerMiddleware);
   }
 
   async dbConnect() {
