@@ -5,7 +5,7 @@ import { authRepository } from "../domain/auth.repository";
 import { generateJwt } from "./generateJwt";
 import { LoginDto } from "../domain/auth.dto";
 import { TokenService } from "./token.service";
-import { RequestWithUserRol } from "../../shared/middleware/shared.Interfaces";
+import { CustomizedRequest } from "../../shared/interfaces/shared.Interfaces";
 
 export class AuthService {
   private readonly authRepository: authRepository;
@@ -22,7 +22,7 @@ export class AuthService {
     this.tokenService = tokenService;
   }
 
-  async login(data: LoginDto, req: RequestWithUserRol, res: Response) {
+  async login(data: LoginDto, req: CustomizedRequest, res: Response) {
     const { email, password } = data;
     const { originalUrl, ip, method } = req;
 
