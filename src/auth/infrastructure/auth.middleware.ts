@@ -4,7 +4,7 @@ import { validate } from "class-validator";
 import { SharedMiddleware } from "../../shared/middleware/shared.middleware";
 import { HttpResponse } from "../../shared/response/httpResponse";
 import { AuthService } from "../application/auth.service";
-import { RequestWithUserRol } from "../../shared/middleware/shared.Interfaces";
+import { CustomizedRequest } from "../../shared/interfaces/shared.Interfaces";
 import { TokenService } from "../application/token.service";
 
 export class AuthMiddleware extends SharedMiddleware {
@@ -16,7 +16,7 @@ export class AuthMiddleware extends SharedMiddleware {
   }
 
   async validateToken(
-    req: RequestWithUserRol,
+    req: CustomizedRequest,
     res: Response,
     next: NextFunction
   ) {
