@@ -8,6 +8,7 @@ import {
   resetPasswordDto,
   emailValidationDto,
 } from "../dependencies";
+import { CustomizedRequest } from "../../../shared/interfaces/shared.Interfaces";
 
 export class AuthRouter extends BaseRouter<AuthController, AuthMiddleware> {
   constructor() {
@@ -18,7 +19,8 @@ export class AuthRouter extends BaseRouter<AuthController, AuthMiddleware> {
     this.router.get(
       "/test",
       (req, res, next) => this.middleware.validateToken(req, res, next),
-      (_req, res) => {
+      (req: CustomizedRequest, res) => {
+        req.logger?.debug("Test completed");
         return res.json("Test Ok");
       }
     );
@@ -46,6 +48,3 @@ export class AuthRouter extends BaseRouter<AuthController, AuthMiddleware> {
     );
   }
 }
-
-
-
