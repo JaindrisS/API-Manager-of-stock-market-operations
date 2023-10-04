@@ -4,7 +4,7 @@ import { createLogger, format, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 import { RoleType } from "../../user/application/user.dto";
 import { HttpResponse } from "../response/httpResponse";
-import { RequestWithUserRol } from "./shared.Interfaces";
+import { CustomizedRequest } from "../interfaces/shared.Interfaces";
 
 const { combine, timestamp, label, printf } = format;
 
@@ -16,7 +16,7 @@ export class SharedMiddleware {
     this.httpResponse = httpResponse;
   }
 
-  checkUserRole(req: RequestWithUserRol, res: Response, next: NextFunction) {
+  checkUserRole(req: CustomizedRequest, res: Response, next: NextFunction) {
     const user = req.user;
 
     if (user?.rol !== RoleType.USER) {
@@ -26,7 +26,7 @@ export class SharedMiddleware {
     return next;
   }
 
-  checkAdminRole(req: RequestWithUserRol, res: Response, next: NextFunction) {
+  checkAdminRole(req: CustomizedRequest, res: Response, next: NextFunction) {
     const user = req.user;
 
     if (user?.rol !== RoleType.ADMIN) {
@@ -37,7 +37,7 @@ export class SharedMiddleware {
   }
 
   customLoggerMiddleware = (
-    req: RequestWithUserRol,
+    req: CustomizedRequest,
     _res: Response,
     next: NextFunction
   ) => {
