@@ -1,3 +1,0 @@
-2023-10-02 19:28:09 [32minfo[39m: MSG: Invalid email or password  -  URL: POST /stock-market-operations/api/login - IP: ::1 - StatusCode: 400  
-19:28:09 [32minfo[39m: ::1 - - [03/Oct/2023:00:28:09 +0000] "POST /stock-market-operations/api/login HTTP/1.1" 400 76 "-" "PostmanRuntime/7.29.3"
-19:29:31 [32minfo[39m: ::1 - - [03/Oct/2023:00:29:31 +0000] "POST /stock-market-operations/api/login HTTP/1.1" 400 76 "-" "PostmanRuntime/7.29.3"
