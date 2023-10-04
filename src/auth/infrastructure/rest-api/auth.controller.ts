@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { CustomizedRequest } from "../../../shared/interfaces/shared.Interfaces";
 import { HttpResponse } from "../../../shared/response/httpResponse";
 import { AuthService } from "../../application/auth.service";
 import { PasswordService } from "../../application/password.service";
@@ -19,9 +20,9 @@ export class AuthController {
     this.httpResponse = httpResponse;
   }
 
-  async login(req: Request, res: Response) {
+  async login(req: CustomizedRequest, res: Response) {
     try {
-      const response = await this.authService.login(req.body, res);
+      const response = await this.authService.login(req.body, req, res);
 
       return response;
     } catch (error) {
