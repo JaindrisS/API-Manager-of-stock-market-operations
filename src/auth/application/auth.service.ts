@@ -25,9 +25,27 @@ export class AuthService {
   async login(data: LoginDto, req: CustomizedRequest, res: Response) {
     const { email, password } = data;
     const { originalUrl, ip, method } = req;
+    let blockingTime = 60;
+    let maximumAttempts = 3;
+    let timeNow = new Date().getTime() / 1000;
 
     try {
       const user = await this.authRepository.getUser(email);
+
+      // check if the user was blocked for unsuccessful attempts, the counter of unsuccessful attempts is reset
+      if (user?.blockedUntil) {
+        if (user?.blockedUntil > timeNow) {
+          await this.authRepository.updateUnsuccessfulAttempts(
+            user.id,
+            null,
+            0
+          );
+          return this.httpResponse.Unauthorized(
+            res,
+            `try again in  ${blockingTime} seconds 1`
+          );
+        }
+      }
 
       const errorMsg = "Invalid email or password";
 
@@ -44,8 +62,25 @@ export class AuthService {
           `MSG: ${errorMsg}  -  URL: ${method} ${originalUrl} - IP: ${ip} - StatusCode: ${400} `
         );
 
+        // update the properties of unsuccessfulAttempts + 1
+        await this.authRepository.updateUnsuccessfulAttempts(user.id, 1, null);
+
+        // verify that the UnsuccessfulAttempts property is at least equal to or greater than the number of attempts allowed before blocking
+        if (user.unsuccessfulAttempts >= maximumAttempts) {
+          await this.authRepository.blockedUntil(
+            user.id,
+            timeNow + blockingTime
+          );
+          return this.httpResponse.Unauthorized(
+            res,
+            `try again in  ${blockingTime} seconds 2`
+          );
+        }
         return this.httpResponse.BadRequest(res, "Invalid email or password");
       }
+
+      // the counter of unsuccessful attempts is reset
+      await this.authRepository.updateUnsuccessfulAttempts(user.id, null, 0);
 
       const token = await generateJwt(user.id);
 
