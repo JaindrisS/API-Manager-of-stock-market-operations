@@ -9,6 +9,8 @@ export interface User {
   resetPassword?: string;
   rol: Roles;
   img: string;
+unsuccessfulAttempts:number,
+blockedUntil:number
 }
 
 export type Login = Pick<User, "email" | "password">;
