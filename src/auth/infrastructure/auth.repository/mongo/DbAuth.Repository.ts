@@ -39,4 +39,38 @@ export class AuthRepository implements authRepository {
 
     return user;
   }
+
+  async updateUnsuccessfulAttempts(
+    id: string,
+    number: number | null,
+    newValue: number | null
+  ): Promise<unknown> {
+    let updateData: any = {};
+
+    if (number !== null) {
+      updateData.$inc = { unsuccessfulAttempts: number };
+    }
+
+    if (newValue !== null) {
+      updateData.unsuccessfulAttempts = newValue;
+    }
+
+    const user = userModel.findByIdAndUpdate(id, updateData, {
+      returnDocument: "after",
+   
+    });
+    return user;
+  }
+
+  async blockedUntil(id: string, number: number): Promise<unknown> {
+    const user = userModel.findByIdAndUpdate(
+      id,
+      {
+        blockedUntil: number,
+      },
+      { returnDocument: "after" }
+    );
+
+    return user;
+  }
 }
