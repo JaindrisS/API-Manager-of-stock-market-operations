@@ -35,6 +35,14 @@ const userSchema = new Schema<User>(
     img: {
       type: String,
     },
+
+    unsuccessfulAttempts: {
+      type: Number,
+    },
+
+    blockedUntil: {
+      type: Number,
+    },
   },
   {
     versionKey: false,
