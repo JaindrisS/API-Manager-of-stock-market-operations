@@ -1,4 +1,3 @@
-import { NullLiteral } from "typescript";
 import { User } from "../../shared/interfaces/user.interfaces";
 
 export interface authRepository {
